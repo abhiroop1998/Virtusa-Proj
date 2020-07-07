@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header :: common-header" />
+
+<body>
+	<div th:replace="common/header :: navbar" />
+
+	<div class="container">
+		<div class="row" style="margin-bottom: -100px;">
+			<div class="col-xs-8">
+				<h2 class="section-headline">
+					<h2 class="section-headline">
+						<span
+							th:text="${user}? ${#strings.toUpperCase(user.username)} : 'All Cloths'"></span>
+					</h2>
+				</h2>
+			</div>
+			<div class="col-xs-4">
+				<img src="/images/logo.png" class="img-responsive" />
+			</div>
+		</div>
+		<hr
+			style="position: absolute; width: 100%; height: 6px; background-color: #333; z-index: -1; margin-top: -80px;" />
+		<img class="img-responsive" src="/images/wood.png"
+			style="margin-top: -75px;" />
+
+		<div class="row" style="margin-top: 60px;">
+			<div class="col-xs-3">
+				<h3>
+					<label for="type">Sort by Type</label>
+				</h3>
+				<div class="list-group" id="type">
+					<a th:href="@{/clothshelf(type='all')}"
+						th:classappend="${activeAll}? 'active'" class="list-group-item">All</a>
+					<a th:href="@{/searchByType(type='Tshirt')}"
+						th:classappend="${activeTshirt}? 'active'" class="list-group-item">T-shirt</a>
+					<a th:href="@{/searchByType(type='Shirt')}"
+						th:classappend="${activeShirt}? 'active'" class="list-group-item">Shirt</a>
+					<a th:href="@{/searchByType(type='Trouser')}"
+						th:classappend="${activeTrouser}? 'active'"
+						class="list-group-item">Trouser</a> <a
+						th:href="@{/searchByType(type='Jeans')}"
+						th:classappend="${activeJeans}? 'active'" class="list-group-item">Jeans</a>
+				</div>
+				<br /> <br />
+				<h3>
+					<label for="gender">Sort By Gender</label>
+				</h3>
+				<div class="list-group" id="gender">
+					<a th:href="@{/searchByGender(gender='Male')}"
+						th:classappend="${activeMale}? 'active'" class="list-group-item">Male</a>
+					<a th:href="@{/searchByGender(gender='Female')}"
+						th:classappend="${activeFemale}? 'active'" class="list-group-item">Female</a>
+				</div>
+			</div>
+			<div class="col-xs-9">
+				<div th:if="${emptyList}">
+					<h5 style="font-style: italic;">Oops, no result is found. Try
+						something else or try again later.</h5>
+				</div>
+
+				<table border="0" id="clothList">
+					<thead>
+						<tr>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="cloth-item" data-th-each="cloth : ${clothList}">
+							<td>
+								<div th:if="${cloth != null}">
+									<div class="row">
+										<br />
+										<div class="col-xs-3">
+											<a th:href="@{/clothDetail?id=}+${cloth.id}"><img
+												class="img-responsive shelf-cloth center-block"
+												th:src="#{adminPath}+@{/images/cloth/}+${cloth.id}+'.png'" /></a>
+										</div>
+										<div class="col-xs-9">
+											<a th:href="@{/clothDetail?id=}+${cloth.id}"><h4
+													th:utext="${cloth.name}"></h4></a><span
+												th:text="${cloth.soldBy}"></span><span
+												th:text="${cloth.productCode}"></span> <br /> <span
+												style="font-size: x-large; color: #db3208;">₹<span
+												th:text="${#numbers.formatDecimal(cloth.cost, 0 , 'COMMA', 2, 'POINT')}"></span></span>
+
+											<span style="text-decoration: line-through;">₹<span
+												th:text="${#numbers.formatDecimal(cloth.previousCost, 0 , 'COMMA', 2, 'POINT')}"></span></span>
+
+											<p th:utext="${#strings.abbreviate(cloth.description, 500)}"></p>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- end of container -->
+	<div th:replace="common/header :: footer" />
+
+	<div th:replace="common/header :: body-bottom-scripts" />
+	<script>
+		/* $(document).ready(function() {
+			$("#clothList").dataTable({
+				"lengthMenu": [ [5,10, 15, 20, -1], [5,10, 15, 20, "All"] ],
+				"ordering": false,
+				stateSave: true
+			});
+			
+			$("#clothList").on('page.dt', function() {
+				$('html, body').animate({
+					scrollTop: $('#clothList').offset().top
+				}, 200);
+			});
+		}); */
+		$(document).ready(
+				function() {
+					$("#clothList").dataTable(
+							{
+								"lengthMenu" : [ [ 5, 10, 15, 20, -1 ],
+										[ 5, 10, 15, 20, "All" ] ],
+								"ordering" : false,
+								stateSave : true
+							});
+				});
+	</script>
+</body>
+</html>
